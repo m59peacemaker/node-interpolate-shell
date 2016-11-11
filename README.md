@@ -28,7 +28,7 @@ interpolateShell('id: ${ id -u }', {left: '${', right: '}'}, (errors, result) =>
 
 - `template: string`
 - `options: object`
-  - `left: string` left delimiter
-  - `right: string` right delimiter
+  - `left: string, {{` left delimiter
+  - `right: string, }}` right delimiter
   - `ignoreErrors: boolean, false` process template even if a command fails. By default, running commands will be killed and there will be no result when a command fails.
 - `cb: function (errors, result)`
