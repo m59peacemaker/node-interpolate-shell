@@ -1,50 +1,33 @@
 const {exec} = require('child_process')
-const replace = require('string-replace')
+const replace = require('replace-async')
 const Regex = require('interpolate-regex')
 const optionalArgs = require('optional-args')
-const {EventEmitter} = require('events')
 const terminate = require('terminate')
+const isNil = require('is-nil')
 
 const defaults = {
   left: '{{',
   right: '}}',
-  concurrent: true,
-  ignoreFailure: false
+  ignoreErrors: false
 }
 
 const interpolate = (template, options, cb) => {
   options = Object.assign({}, defaults, options)
   const regex = Regex(options.left, options.right, true)
-  const emitter = new EventEmitter()
-  let failed = false
   replace(template, regex, (done, _, cmd) => {
     if (!cmd.length) {
       done(undefined, '')
     } else {
-      if (failed) {
-        return done()
-      }
-      let thisOneFailed = false
       const p = exec(cmd, (err, stdout, stderr) => {
-        if (failed) {
-          return done()
-        }
-        if (err && options.ignoreFailure !== true) {
-          failed = true
-          thisOneFailed = true
-          emitter.emit('failure')
-          return done(err)
+        if (!isNil(err)) {
+          done(new Error(`${cmd}: ${err.message}\n${stderr}`))
         } else {
           done(undefined, stdout.trim())
         }
       })
-      emitter.on('failure', () => {
-        if (!thisOneFailed) {
-          terminate(p.pid, () => done())
-        }
-      })
+      return () => terminate(p.pid, done) // should only ever fire if p hasn't already finished
     }
-  }, {parallel: options.concurrent}, cb)
+  }, {ignoreErrors: options.ignoreErrors}, cb)
 }
 
 module.exports = optionalArgs(1, 3, interpolate)

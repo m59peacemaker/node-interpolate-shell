@@ -13,17 +13,12 @@ npm install interpolate-shell
 ```js
 const interpolateShell = require('interpolate-shell')
 
-interpolateShell('id: {{ id -u }}', (err, result) => {
+interpolateShell('id: {{ id -u }}', (errors, result) => {
   result // 'id: 1000'
 })
 
-interpolateShell('id: ${ id -u }', {left: '${', right: '}'}, (err, result) => {
+interpolateShell('id: ${ id -u }', {left: '${', right: '}'}, (errors, result) => {
   result // 'id: 1000'
-})
-
-// execute sequentially rather than concurrently
-interpolateShell('{{ command_1 }} {{ command_2 }}', {concurrent: false}, (err, result) => {
-
 })
 ```
 
@@ -35,6 +30,5 @@ interpolateShell('{{ command_1 }} {{ command_2 }}', {concurrent: false}, (err, r
 - `options: object`
   - `left: string` left delimiter
   - `right: string` right delimiter
-  - `concurrent: boolean, true` execute commands concurrently or sequentially
-  - `ignoreFailure: boolean, false` process template even if a command fails. By default, processing will stop and `cb` will be called with `err` when a command fails.
-- `cb: function (err, result)`
+  - `ignoreErrors: boolean, false` process template even if a command fails. By default, running commands will be killed and there will be no result when a command fails.
+- `cb: function (errors, result)`
