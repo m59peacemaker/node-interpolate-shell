@@ -127,3 +127,12 @@ test('ignore failed commands when options.ignoreErrors = true', t => {
     t.equal(result, ' hey ')
   })
 })
+
+test('calls the callback even though there is nothing to interpolate', t => {
+  t.plan(2)
+  const input = 'hey jude'
+  interpolate(input, (errors, result) => {
+    t.equal(errors, undefined)
+    t.equal(result, input)
+  })
+})

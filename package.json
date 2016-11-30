@@ -1,6 +1,6 @@
 {
   "name": "interpolate-shell",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Takes a string that has placeholders containing shell commands, replaces the placeholders with the stdout value of their shell commands, and calls a callback with the result.",
   "keywords": [
     "interpolate",
@@ -31,7 +31,7 @@
     "interpolate-regex": "^1.0.0",
     "is-nil": "^1.0.1",
     "optional-args": "^2.1.0",
-    "replace-async": "^1.0.0",
+    "replace-async": "^1.1.0",
     "terminate": "^1.0.8"
   },
   "devDependencies": {
